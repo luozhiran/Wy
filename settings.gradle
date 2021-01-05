@@ -1,2 +1,3 @@
 rootProject.name='Wy'
 include ':app'
+include ':lview'
