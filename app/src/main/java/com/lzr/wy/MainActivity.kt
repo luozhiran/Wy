@@ -2,6 +2,7 @@ package com.lzr.wy
 
 import android.os.Bundle
 import android.os.Handler
+import android.widget.RadioGroup
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.lzr.wy.databinding.ActivityMainBinding
@@ -26,6 +27,16 @@ class MainActivity : BaseActivity() {
             ActivityFragment.newInstance(),
             UserFragment.newInstance()
         )
+        binder.bottomBar.setOnCheckedChangeListener { _, checkedId ->
+            binder.viewpager.apply {
+                when (checkedId) {
+                    R.id.tab1 -> setCurrentItem(0,false)
+                    R.id.tab2 -> setCurrentItem(1,false)
+                    R.id.tab3 -> setCurrentItem(2,false)
+                    R.id.tab4 -> setCurrentItem(3,false)
+                }
+            }
+        }
     }
 
 }
