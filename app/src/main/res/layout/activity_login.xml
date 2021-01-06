@@ -1,44 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".login.LoginActivity">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:scaleType="centerCrop"
-        android:src="@mipmap/ic_login_1"
-        android:visibility="visible" />
+    <data>
 
+    </data>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context=".login.LoginActivity">
 
-        <com.lzr.lview.LineTestView
+        <ImageView
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="注册" />
+            android:layout_height="wrap_content"
+            android:scaleType="centerCrop"
+            android:src="@mipmap/ic_login_1"
+            android:visibility="visible" />
 
 
-        <com.lzr.lview.LineTestView
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="登录" />
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <com.lzr.lview.LineTestView
+                android:id="@+id/register"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="注册"
+                android:textColor="@drawable/login_register_state"
+                app:checkColor="true" />
+
+
+            <com.lzr.lview.LineTestView
+                android:id="@+id/login"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="登录"
+                android:textColor="@drawable/login_register_state" />
+        </LinearLayout>
+
+        <com.lzr.lview.LoginView
+            android:id="@+id/loginParamView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp" />
+
+        <Button
+            android:id="@+id/loginBtn"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/login_btn"
+            android:text="确定"
+            android:textColor="#ffffff" />
+
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|center"
+                android:layout_marginBottom="10dp"
+                android:text="注册表示你同意该软件用户服务协议和隐私政策" />
+        </FrameLayout>
+
+
     </LinearLayout>
-
-    <com.lzr.lview.LoginView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-
-</LinearLayout>
+</layout>

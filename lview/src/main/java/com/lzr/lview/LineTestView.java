@@ -1,6 +1,8 @@
 package com.lzr.lview;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -25,18 +27,23 @@ public class LineTestView extends androidx.appcompat.widget.AppCompatTextView {
 
     public LineTestView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+
+        boolean check;
+        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.LineTestView);
+        check = a.getBoolean(R.styleable.LineTestView_checkColor, false);
+        a.recycle();
         sPaint = new Paint();
         sPaint.setAntiAlias(true);
-        sPaint.setColor(Color.parseColor("#789ad9"));
-        sPaint.setStrokeWidth(2);
-
+        sPaint.setColor(getResources().getColor(R.color.login_bottom_line));
+        sPaint.setStrokeWidth(3);
         upaint = new Paint();
         upaint.setAntiAlias(true);
         upaint.setStrokeWidth(1);
-        upaint.setColor(Color.parseColor("#dedede"));
+        upaint.setColor(getResources().getColor(R.color.login_bottom_line_normal));
 
-        cPaint = sPaint;
+        setSelected(check);
     }
+
 
 
     @Override
@@ -46,11 +53,14 @@ public class LineTestView extends androidx.appcompat.widget.AppCompatTextView {
         canvas.drawLine(0, getHeight(), getWidth(), getHeight(), cPaint);
     }
 
-    public void setCheck(boolean check) {
-        if (check) {
+
+    @Override
+    public void setSelected(boolean selected) {
+        if (selected) {
             cPaint = sPaint;
         } else {
             cPaint = upaint;
         }
+        super.setSelected(selected);
     }
 }

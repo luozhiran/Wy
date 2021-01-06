@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="login_bottom_line">#789ad9</color>
+    <color name="login_bottom_line_normal">#dedede</color>
+    <color name="login_word_color">#bbbbbb</color>
+</resources>
