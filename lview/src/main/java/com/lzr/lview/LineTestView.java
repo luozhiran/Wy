@@ -49,7 +49,6 @@ public class LineTestView extends androidx.appcompat.widget.AppCompatTextView {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        L.e(getText() + "  " + getLeft() + "  " + getBottom() + "  " + getRight() + "  " + getBottom());
         canvas.drawLine(0, getHeight(), getWidth(), getHeight(), cPaint);
     }
 

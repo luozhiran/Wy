@@ -2,6 +2,7 @@ package com.lzr.wy.login
 
 import android.os.Handler
 import android.os.Looper
+import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import com.itg.lib_log.L
 import com.plugin.okhttp_lib.okhttp.ItgOk
@@ -19,13 +20,17 @@ class LoginViewModel : ViewModel() {
         hub?.show()
         ItgOk
             .instance()
-            .url("http://localhost:8081/login")
+            .url("http://192.168.40.163:8081/login")
             .method(ItgOk.GET)
             .addParams("name", name)
             .addParams("pwd", pwd)
             .go(object : Callback {
                 override fun onFailure(call: Call, e: IOException) {
-                    handler.post { hub?.dismiss() }
+                    handler.post {
+                        Toast.makeText(ItgOk.instance().application, e.message, Toast.LENGTH_SHORT)
+                            .show()
+                        hub?.dismiss()
+                    }
                 }
 
                 override fun onResponse(call: Call, response: Response) {
@@ -49,21 +54,24 @@ class LoginViewModel : ViewModel() {
         hub?.show()
         ItgOk
             .instance()
-            .url("http://localhost:8081/register")
+            .url("http://192.168.40.163:8081/register")
             .method(ItgOk.POST)
             .addParams("phone", phone)
             .addParams("pwd", pwd)
             .addParams("email", email)
-            .addParams("code", code)
+            .addParams("vcode", code)
             .go(object : Callback {
                 override fun onFailure(call: Call, e: IOException) {
-                    handler.post { hub?.dismiss() }
+                    handler.post {
+                        Toast.makeText(ItgOk.instance().application, e.message, Toast.LENGTH_SHORT)
+                            .show()
+                        hub?.dismiss()
+                    }
                 }
 
                 override fun onResponse(call: Call, response: Response) {
                     handler.post { hub?.dismiss() }
                     notifyUi.onNotify(response)
-                    L.e(response.body()?.string())
                 }
 
             })

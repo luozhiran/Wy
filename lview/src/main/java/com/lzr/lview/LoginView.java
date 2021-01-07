@@ -5,6 +5,8 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.CountDownTimer;
+import android.text.InputFilter;
+import android.text.Spanned;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
@@ -14,12 +16,27 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class LoginView extends ViewGroup {
 
+
+    public static final int LOGIN = 1;
+    public static final int REGISTER = 2;
+    private int type = 0;
     private ViewFactory mViewFactory;
-    private EditText emial, pwd, phone;
+    private EditText emial, pwd, phone, code;
+    private EditText loginName, loginPwd;
     private Button vcode;
     private CountDownTimer countDownTimer;
+    private List<View> registerViews = new ArrayList<>();
+    private List<View> loginViews = new ArrayList<>();
+    private int[] registerIc = {R.mipmap.b, R.mipmap.c, R.mipmap.d, R.mipmap.e};
+    private String[] registerSr = {"请输入邮箱", "请输入密码", "请输入手机号", "请输入验证码"};
+    private int[] loginIc = {R.mipmap.f, R.mipmap.c};
+    private String[] loginSr = {"请输入用户名", "请输入密码"};
+
 
     public LoginView(Context context) {
         this(context, null);
@@ -33,42 +50,16 @@ public class LoginView extends ViewGroup {
         super(context, attrs, defStyleAttr);
         mViewFactory = ViewFactory.create();
 
-        View view = mViewFactory.createView(context, R.mipmap.b, "请输入邮箱");
-        addView(view, relayout(view));
-
-        view = mViewFactory.createView(context, R.mipmap.c, "请输入密码");
-        addView(view, relayout(view));
-
-
-        view = mViewFactory.createView(context, R.mipmap.d, "请输入手机号");
-        addView(view, relayout(view));
-
-        view = mViewFactory.createView(context, R.mipmap.e, "请输入验证码");
-        addView(view, relayout(view));
-
-        emial = findViewWithTag("请输入邮箱");
-        pwd = findViewWithTag("请输入密码");
-        phone = findViewWithTag("请输入手机号");
-        vcode = findViewWithTag("获取验证码");
-        vcode.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (countDownTimer == null) {
-                    countDownTimer = new CountDownTimer(60 * 1000, 1000) {
-                        @Override
-                        public void onTick(long millisUntilFinished) {
-                            vcode.setText(millisUntilFinished / 1000 + " s");
-                        }
-
-                        @Override
-                        public void onFinish() {
-                            vcode.setText("获取验证码");
-                        }
-                    };
-                }
-                countDownTimer.start();
-            }
-        });
+        for (int i = 0; i < registerIc.length; i++) {
+            View view = mViewFactory.createView(context, registerIc[i], registerSr[i], false);
+            registerViews.add(view);
+        }
+        for (int i = 0; i < loginIc.length; i++) {
+            View view = mViewFactory.createView(context, loginIc[i], loginSr[i], true);
+            loginViews.add(view);
+            addView(view, relayout(view));
+        }
+        switchPan(REGISTER);
     }
 
 
@@ -116,7 +107,12 @@ public class LoginView extends ViewGroup {
 
 
     public String getPhone() {
-        return phone.getText().toString();
+        if (type == LOGIN) {
+            return loginName.getText().toString();
+        } else {
+            return phone.getText().toString();
+        }
+
     }
 
     public String getEmail() {
@@ -124,11 +120,15 @@ public class LoginView extends ViewGroup {
     }
 
     public String getVcode() {
-        return vcode.getText().toString();
+        return code.getText().toString();
     }
 
     public String getPwd() {
-        return pwd.getText().toString();
+        if (type == LOGIN) {
+            return loginPwd.getText().toString();
+        } else {
+            return pwd.getText().toString();
+        }
     }
 
 
@@ -140,8 +140,56 @@ public class LoginView extends ViewGroup {
         }
     }
 
-    public void switchPan() {
+    public void switchPan(int type) {
+        if (this.type == type) return;
         removeAllViews();
+        this.type = type;
+        if (type == LOGIN) {
+            for (View v : loginViews) {
+                addView(v, relayout(v));
+            }
+            findViewForLogin();
+        } else if (type == REGISTER) {
+            for (View v : registerViews) {
+                addView(v, relayout(v));
+            }
+            findViewForRegister();
+        }
+    }
+
+
+    private void findViewForRegister() {
+        if (emial != null) return;
+        emial = findViewWithTag(registerSr[0]);
+        pwd = findViewWithTag(registerSr[1]);
+        phone = findViewWithTag(registerSr[2]);
+        code = findViewWithTag(registerSr[3]);
+        vcode = findViewWithTag("获取验证码");
+        vcode.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (countDownTimer == null) {
+                    countDownTimer = new CountDownTimer(60 * 1000, 1000) {
+                        @Override
+                        public void onTick(long millisUntilFinished) {
+                            vcode.setText(millisUntilFinished / 1000 + " s");
+                        }
+
+                        @Override
+                        public void onFinish() {
+                            vcode.setText("获取验证码");
+                        }
+                    };
+                }
+                countDownTimer.start();
+            }
+        });
+    }
+
+    private void findViewForLogin() {
+        if (loginName != null) return;
+        loginName = findViewWithTag(loginSr[0]);
+        loginPwd = findViewWithTag(loginSr[1]);
     }
 
     static class ViewFactory {
@@ -153,14 +201,16 @@ public class LoginView extends ViewGroup {
             return new ViewFactory();
         }
 
-        @SuppressLint("ResourceType")
-        public View createView(Context context, int imgId, String msg) {
-            LinearLayout linearLayout = new LinearLayout(context);
+
+        View createView(Context context, int imgId, String msg, boolean drawline) {
+            LineLinearLayout linearLayout = new LineLinearLayout(context);
             linearLayout.setOrientation(LinearLayout.HORIZONTAL);
             linearLayout.setGravity(Gravity.CENTER_VERTICAL);
-            setBackgroundStateList(linearLayout, 0, Color.parseColor("#a3bde2"), Color.parseColor("#ffffff"));
-
-
+            if (drawline) {
+                linearLayout.drawLine(true);
+            } else {
+                setBackgroundStateList(linearLayout, 0, Color.parseColor("#a3bde2"), Color.parseColor("#ffffff"));
+            }
             ImageView imageView = new ImageView(context);
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(44, 44);
             imageView.setImageResource(imgId);
@@ -168,7 +218,6 @@ public class LoginView extends ViewGroup {
 
 
             EditText textView = new EditText(context);
-            textView.setId(-100000);
             textView.setSingleLine(true);
             textView.setHint(msg);
             textView.setBackground(null);
@@ -178,6 +227,15 @@ public class LoginView extends ViewGroup {
 
             if ("请输入验证码".equals(msg)) {
                 LinearLayout.LayoutParams textLayoutParams = new LinearLayout.LayoutParams(300, wrap);
+                textView.setFilters(new InputFilter[]{new InputFilter() {
+                    @Override
+                    public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
+                        if (dest.length() > 5) {
+                            return "";
+                        }
+                        return null;
+                    }
+                }});
                 linearLayout.addView(textView, textLayoutParams);
             } else {
                 LinearLayout.LayoutParams textLayoutParams = new LinearLayout.LayoutParams(match, wrap);
@@ -209,5 +267,6 @@ public class LoginView extends ViewGroup {
             gradientDrawable.setColor(solidColor);
             view.setBackground(gradientDrawable);
         }
+
     }
 }
