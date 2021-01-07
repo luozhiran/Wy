@@ -1,6 +1,7 @@
 package com.lzr.wy.login
 
 import android.Manifest
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.databinding.DataBindingUtil
@@ -8,6 +9,7 @@ import androidx.lifecycle.ViewModelProviders
 import com.itg.lib_log.L
 import com.lzr.lbase.WrapBaseActivity
 import com.lzr.lview.LoginView
+import com.lzr.wy.MainActivity
 import com.lzr.wy.R
 import com.lzr.wy.databinding.ActivityLoginBinding
 import com.plugin.itg_util.Utils
@@ -54,9 +56,17 @@ class LoginActivity : WrapBaseActivity(), View.OnClickListener {
                                     phone,
                                     pwd,
                                     hub,
-                                    object : OnNotifyUi<Response> {
-                                        override fun onNotify(data: Response) {
-
+                                    object : OnNotifyUi<Int> {
+                                        override fun onNotify(data: Int) {
+                                            if (data == 1) {
+                                                startActivity(
+                                                    Intent(
+                                                        this@LoginActivity,
+                                                        MainActivity::class.java
+                                                    )
+                                                )
+                                                finish()
+                                            }
                                         }
                                     })
                             }
@@ -68,9 +78,9 @@ class LoginActivity : WrapBaseActivity(), View.OnClickListener {
                                     email,
                                     vcode,
                                     hub,
-                                    object : OnNotifyUi<Response> {
-                                        override fun onNotify(data: Response) {
-                                            L.e(data.body()?.string())
+                                    object : OnNotifyUi<Int> {
+                                        override fun onNotify(data: Int) {
+                                            switchPan(LoginView.LOGIN)
                                         }
                                     })
                             }
