@@ -1,15 +1,18 @@
 package com.lzr.wy
 
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.widget.RadioGroup
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
+import com.itg.lib_log.L
 import com.lzr.wy.databinding.ActivityMainBinding
 import com.lzr.wy.fragment.ActivityFragment
 import com.lzr.wy.fragment.HomeFragment
 import com.lzr.wy.fragment.OwnFloorFragment
 import com.lzr.wy.fragment.UserFragment
+import com.plugin.itg_util.InvokeSystemCameraUtils
 import com.yk.base.BaseActivity
 
 class MainActivity : BaseActivity() {
@@ -30,11 +33,21 @@ class MainActivity : BaseActivity() {
         binder.bottomBar.setOnCheckedChangeListener { _, checkedId ->
             binder.viewpager.apply {
                 when (checkedId) {
-                    R.id.tab1 -> setCurrentItem(0,false)
-                    R.id.tab2 -> setCurrentItem(1,false)
-                    R.id.tab3 -> setCurrentItem(2,false)
-                    R.id.tab4 -> setCurrentItem(3,false)
+                    R.id.tab1 -> setCurrentItem(0, false)
+                    R.id.tab2 -> setCurrentItem(1, false)
+                    R.id.tab3 -> setCurrentItem(2, false)
+                    R.id.tab4 -> setCurrentItem(3, false)
                 }
+            }
+        }
+    }
+
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        for (f in model.fragments) {
+            if (f.userVisibleHint) {
+                f.onActivityResult(requestCode, resultCode, data)
             }
         }
     }

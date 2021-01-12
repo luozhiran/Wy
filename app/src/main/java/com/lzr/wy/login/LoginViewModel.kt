@@ -6,6 +6,7 @@ import android.os.Looper
 import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import com.itg.lib_log.L
+import com.lzr.wy.IP
 import com.lzr.wy.USER_XML
 import com.plugin.okhttp_lib.okhttp.ItgOk
 import com.plugin.widget.dialog.KProgressHUD
@@ -23,7 +24,7 @@ class LoginViewModel : ViewModel() {
         hub?.show()
         ItgOk
             .instance()
-            .url("http://192.168.40.163:8081/login")
+            .url("$IP/login")
             .method(ItgOk.GET)
             .addParams("name", name)
             .addParams("pwd", pwd)
@@ -69,7 +70,7 @@ class LoginViewModel : ViewModel() {
         hub?.show()
         ItgOk
             .instance()
-            .url("http://192.168.40.163:8081/register")
+            .url("${IP}/register")
             .method(ItgOk.POST)
             .addParams("phone", phone)
             .addParams("pwd", pwd)
