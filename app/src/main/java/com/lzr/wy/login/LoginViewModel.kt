@@ -6,6 +6,8 @@ import android.os.Looper
 import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import com.itg.lib_log.L
+import com.lzr.lbase.ConvertObject
+import com.lzr.lbase.NetMainThreadCallback
 import com.lzr.wy.IP
 import com.lzr.wy.USER_XML
 import com.plugin.okhttp_lib.okhttp.ItgOk
@@ -18,9 +20,7 @@ import java.io.IOException
 
 class LoginViewModel : ViewModel() {
 
-    private val handler: Handler = Handler(Looper.getMainLooper())
-
-    fun login(name: String, pwd: String, hub: KProgressHUD, notifyUi: OnNotifyUi<Int>) {
+    fun login(name: String, pwd: String, hub: KProgressHUD, convertObject: ConvertObject<Int>) {
         hub?.show()
         ItgOk
             .instance()
@@ -28,18 +28,9 @@ class LoginViewModel : ViewModel() {
             .method(ItgOk.GET)
             .addParams("name", name)
             .addParams("pwd", pwd)
-            .go(object : Callback {
-                override fun onFailure(call: Call, e: IOException) {
-                    handler.post {
-                        Toast.makeText(ItgOk.instance().application, e.message, Toast.LENGTH_SHORT)
-                            .show()
-                        hub?.dismiss()
-                    }
-                }
-
-                override fun onResponse(call: Call, response: Response) {
-                    handler.post { hub?.dismiss() }
-                    val json = JSONObject(response.body()?.string()?:"")
+            .go(object : NetMainThreadCallback(hub) {
+                override fun onResponse(response: Response?) {
+                    val json = JSONObject(response?.body()?.string() ?: "")
                     val code = json.optInt("code")
                     if (code == 1) {
                         val sharedPreferences = ItgOk.instance().application.getSharedPreferences(
@@ -50,9 +41,8 @@ class LoginViewModel : ViewModel() {
                             "token",
                             json.optJSONObject("data")?.optString("token")
                         ).apply()
+                        convertObject.callback(code);
                     }
-                    notifyUi.onNotify(code)
-                    L.e(response.body()?.string())
                 }
 
             })
@@ -65,7 +55,7 @@ class LoginViewModel : ViewModel() {
         email: String,
         code: String,
         hub: KProgressHUD?,
-        notifyUi: OnNotifyUi<Int>
+        convertObject: ConvertObject<Int>
     ) {
         hub?.show()
         ItgOk
@@ -76,32 +66,14 @@ class LoginViewModel : ViewModel() {
             .addParams("pwd", pwd)
             .addParams("email", email)
             .addParams("vcode", code)
-            .go(object : Callback {
-                override fun onFailure(call: Call, e: IOException) {
-                    handler.post {
-                        Toast.makeText(ItgOk.instance().application, e.message, Toast.LENGTH_SHORT)
-                            .show()
-                        hub?.dismiss()
-                    }
-                }
-
-                override fun onResponse(call: Call, response: Response) {
-                    handler.post { hub?.dismiss() }
-                    val json = JSONObject(response.body()?.string()?:"")
+            .go(object : NetMainThreadCallback(hub) {
+                override fun onResponse(response: Response?) {
+                    val json = JSONObject(response?.body()?.string() ?: "")
                     val code = json.optInt("code")
-                    notifyUi.onNotify(code)
+                    convertObject.callback(code)
                 }
-
             })
     }
 
-    override fun onCleared() {
-        handler.removeCallbacksAndMessages(null)
-    }
-
 }
 
-
-interface OnNotifyUi<T> {
-    fun onNotify(data: T);
-}

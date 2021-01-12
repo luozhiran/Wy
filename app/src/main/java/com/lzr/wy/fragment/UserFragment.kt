@@ -12,14 +12,21 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProviders
+import com.alibaba.fastjson.JSON
+import com.bumptech.glide.Glide
 import com.itg.lib_log.L
 import com.lzr.lbase.BaseFragment
+import com.lzr.lbase.ConvertObject
 import com.lzr.wy.PROVIDER_AUTHORITY
+import com.lzr.wy.bean.User
+import com.lzr.wy.bean.UserCenterItem
 import com.lzr.wy.databinding.UserFragmentBinding
+import com.plugin.itg_util.FileIoUtils
 import com.plugin.itg_util.InvokeSystemCameraUtils
 import com.plugin.itg_util.Utils
 import com.plugin.okhttp_lib.okhttp.ItgOk
 import com.plugin.widget.dialog.KProgressHUD
+import java.io.File
 
 
 class UserFragment : BaseFragment() {
@@ -47,6 +54,7 @@ class UserFragment : BaseFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(this).get(UserViewModel::class.java)
+        binder.model=viewModel
         imgTool = InvokeSystemCameraUtils.create(ItgOk.instance().application, PROVIDER_AUTHORITY)
 
         binder.photo.setOnClickListener {
@@ -81,14 +89,26 @@ class UserFragment : BaseFragment() {
 
     override fun loadData() {
         L.e("获取用户信息")
-        viewModel.getUser()
+        viewModel.getUser(hub, object : ConvertObject<User> {
+            override fun callback(t: User) {
+                L.e(t.picture)
+                context?.let {
+                    Glide.with(it).load(t.picture).into(binder.photo)
+                    binder.userName.text = t.name
+                }
+
+            }
+        })
+        val centerItemString = FileIoUtils.getAssetsFile("user_center.json", context)
+        val list = JSON.parseArray(centerItemString, UserCenterItem::class.java)
+        viewModel.add(list)
     }
 
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == take_picturl) {
-            viewModel.uploadImg("")
+            viewModel.uploadImg("${Environment.getExternalStorageDirectory()}/logo.png", hub)
             imgTool.luBanCompress(
                 requestCode,
                 resultCode,
@@ -105,7 +125,7 @@ class UserFragment : BaseFragment() {
                     ) {
                         if (TextUtils.isEmpty(compressImgPath)) return
                         compressImgPath?.let {
-                            viewModel.uploadImg(compressImgPath)
+                            viewModel.uploadImg(compressImgPath, hub)
                         }
                     }
 

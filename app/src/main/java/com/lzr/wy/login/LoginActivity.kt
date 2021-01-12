@@ -7,6 +7,7 @@ import android.view.View
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProviders
 import com.itg.lib_log.L
+import com.lzr.lbase.ConvertObject
 import com.lzr.lbase.WrapBaseActivity
 import com.lzr.lview.LoginView
 import com.lzr.wy.MainActivity
@@ -56,8 +57,8 @@ class LoginActivity : WrapBaseActivity(), View.OnClickListener {
                                     phone,
                                     pwd,
                                     hub,
-                                    object : OnNotifyUi<Int> {
-                                        override fun onNotify(data: Int) {
+                                    object : ConvertObject<Int> {
+                                        override fun callback(data: Int) {
                                             if (data == 1) {
                                                 startActivity(
                                                     Intent(
@@ -78,8 +79,8 @@ class LoginActivity : WrapBaseActivity(), View.OnClickListener {
                                     email,
                                     vcode,
                                     hub,
-                                    object : OnNotifyUi<Int> {
-                                        override fun onNotify(data: Int) {
+                                    object : ConvertObject<Int> {
+                                        override fun callback(data: Int) {
                                             switchPan(LoginView.LOGIN)
                                         }
                                     })
