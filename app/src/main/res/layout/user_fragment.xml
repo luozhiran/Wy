@@ -61,6 +61,7 @@
 
 
         <RadioGroup
+            android:id="@+id/navigationBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/user_bg"
@@ -70,6 +71,7 @@
             android:paddingBottom="3dp">
 
             <RadioButton
+                android:id="@+id/tab1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -82,6 +84,7 @@
                 android:textSize="18sp" />
 
             <RadioButton
+                android:id="@+id/tab2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -95,6 +98,7 @@
 
 
             <RadioButton
+                android:id="@+id/tab3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -108,6 +112,7 @@
 
 
             <RadioButton
+                android:id="@+id/tab4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -126,9 +131,11 @@
             android:id="@+id/recycler"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layoutManager="@{LayoutManagers.grid(4)}"
+            android:background="#f4f4f4"
+            android:overScrollMode="never"
+            app:itemBinding="@{model.multipleItems}"
             app:items="@{model.headerFooterItems}"
-            app:itemBinding="@{model.multipleItems}"/>
+            app:layoutManager="@{LayoutManagers.grid(4)}" />
 
 
     </LinearLayout>

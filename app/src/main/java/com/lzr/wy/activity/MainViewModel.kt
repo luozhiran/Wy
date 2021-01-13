@@ -1,4 +1,4 @@
-package com.lzr.wy
+package com.lzr.wy.activity
 
 import androidx.fragment.app.Fragment
 import com.plugin.mvvm.viewpagerModel.PageFragmentModel

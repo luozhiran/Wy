@@ -3,6 +3,7 @@ package com.lzr.wy.fragment
 import android.Manifest
 import android.app.AlertDialog
 import android.content.Intent
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
@@ -10,14 +11,19 @@ import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.RadioGroup
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.DividerItemDecoration
 import com.alibaba.fastjson.JSON
 import com.bumptech.glide.Glide
 import com.itg.lib_log.L
 import com.lzr.lbase.BaseFragment
 import com.lzr.lbase.ConvertObject
+import com.lzr.lbase.GridDividerItemDecoration
 import com.lzr.wy.PROVIDER_AUTHORITY
+import com.lzr.wy.R
+import com.lzr.wy.activity.SettingActivity
 import com.lzr.wy.bean.User
 import com.lzr.wy.bean.UserCenterItem
 import com.lzr.wy.databinding.UserFragmentBinding
@@ -26,6 +32,7 @@ import com.plugin.itg_util.InvokeSystemCameraUtils
 import com.plugin.itg_util.Utils
 import com.plugin.okhttp_lib.okhttp.ItgOk
 import com.plugin.widget.dialog.KProgressHUD
+import kotlinx.android.synthetic.main.user_fragment.view.*
 import java.io.File
 
 
@@ -54,7 +61,7 @@ class UserFragment : BaseFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(this).get(UserViewModel::class.java)
-        binder.model=viewModel
+        binder.model = viewModel
         imgTool = InvokeSystemCameraUtils.create(ItgOk.instance().application, PROVIDER_AUTHORITY)
 
         binder.photo.setOnClickListener {
@@ -64,8 +71,25 @@ class UserFragment : BaseFragment() {
         if (per != null && per.isNotEmpty()) {
             Utils.requestPermission(per, activity, 11)
         }
+        binder.recycler.addItemDecoration(GridDividerItemDecoration(Color.parseColor("#f1f1f1"), 1))
+
+
+        binder.tab1.setOnClickListener{
+
+        }
+        binder.tab2.setOnClickListener{
+
+        }
+        binder.tab3.setOnClickListener{
+
+        }
+        binder.tab4.setOnClickListener{
+            startActivity(Intent(context, SettingActivity::class.java))
+        }
 
     }
+
+
 
     private fun takePhoto() {
         val dialogBox = AlertDialog.Builder(activity)

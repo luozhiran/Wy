@@ -3,12 +3,11 @@ package com.lzr.wy.first
 import android.Manifest
 import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
 import androidx.databinding.DataBindingUtil
 import com.lzr.lbase.WrapBaseActivity
-import com.lzr.wy.MainActivity
+import com.lzr.wy.activity.MainActivity
 import com.lzr.wy.R
 import com.lzr.wy.USER_XML
 import com.lzr.wy.databinding.ActivityFirstBinding

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="model"
+            type="com.lzr.wy.activity.SettingViewModel" />
+
+        <import type="com.plugin.mvvm.bindingAdapter.LayoutManagers" />
+
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context=".activity.SettingActivity">
+
+
+        <com.plugin.widget.NavaHead
+            android:id="@+id/head"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            app:layout_constraintTop_toTopOf="parent"
+            app:src="@mipmap/ic_nav_back"
+            app:srcHeight="40dp"
+            app:srcWidth="40dp"
+            app:text="设置"
+            app:textGravity="CENTER" />
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:overScrollMode="never"
+            app:itemBinding="@{model.multipleItems}"
+            app:items="@{model.totalList}"
+            app:layoutManager="@{LayoutManagers.linear()}" />
+
+
+    </LinearLayout>
+</layout>

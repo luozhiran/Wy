@@ -6,19 +6,13 @@ import android.os.Bundle
 import android.view.View
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProviders
-import com.itg.lib_log.L
 import com.lzr.lbase.ConvertObject
 import com.lzr.lbase.WrapBaseActivity
 import com.lzr.lview.LoginView
-import com.lzr.wy.MainActivity
+import com.lzr.wy.activity.MainActivity
 import com.lzr.wy.R
 import com.lzr.wy.databinding.ActivityLoginBinding
-import com.plugin.itg_util.Utils
 import com.plugin.widget.dialog.KProgressHUD
-import com.yk.base.BaseActivity
-import okhttp3.Callback
-import okhttp3.Response
-import java.io.IOException
 
 class LoginActivity : WrapBaseActivity(), View.OnClickListener {
 
