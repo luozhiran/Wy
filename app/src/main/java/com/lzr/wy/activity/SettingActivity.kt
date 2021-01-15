@@ -1,19 +1,18 @@
 package com.lzr.wy.activity
 
 
+import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
-import android.provider.CalendarContract
 import android.view.View
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProviders
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.RecyclerView
-import com.itg.lib_log.L
 import com.lzr.lbase.LinDividerItemDecoration
-
 import com.lzr.wy.R
+import com.lzr.wy.USER_XML
 import com.lzr.wy.databinding.ActivitySettingBinding
+import com.lzr.wy.login.LoginActivity
 import com.yk.base.BaseActivity
 
 class SettingActivity : BaseActivity() {
@@ -30,11 +29,15 @@ class SettingActivity : BaseActivity() {
         viewModel.createSettingItem()
         binder.recyclerView.addItemDecoration(LinDividerItemDecoration(Color.parseColor("#cccccc")))
         viewModel.bindItemEvent(this)
+        binder.head.setSrcOnClick { finish() }
     }
 
 
     fun quit(view: View) {
-
-        L.e("00000000000000")
+        val sh = getSharedPreferences(USER_XML, Context.MODE_PRIVATE)
+        sh.edit().clear().apply()
+        val intent = Intent(this, LoginActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+        startActivity(intent)
     }
 }

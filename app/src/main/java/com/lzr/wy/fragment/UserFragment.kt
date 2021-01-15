@@ -45,9 +45,7 @@ class UserFragment : BaseFragment() {
     private lateinit var viewModel: UserViewModel
     lateinit var hub: KProgressHUD
     lateinit var binder: UserFragmentBinding
-    lateinit var imgTool: InvokeSystemCameraUtils
 
-    val take_picturl = 11
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -55,6 +53,7 @@ class UserFragment : BaseFragment() {
     ): View? {
         hub = KProgressHUD.create(activity).setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)
         binder = UserFragmentBinding.inflate(inflater, container, false)
+        binder.event = this
         return binder.root
     }
 
@@ -62,57 +61,57 @@ class UserFragment : BaseFragment() {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(this).get(UserViewModel::class.java)
         binder.model = viewModel
-        imgTool = InvokeSystemCameraUtils.create(ItgOk.instance().application, PROVIDER_AUTHORITY)
-
-        binder.photo.setOnClickListener {
-            takePhoto()
-        }
+        viewModel.bindItemEvent(this)
+        binder.photo.setOnClickListener { activity?.let { viewModel.takePhoto(it) } }
         val per = Utils.checkPermission(context, arrayOf(Manifest.permission.CAMERA))
         if (per != null && per.isNotEmpty()) {
             Utils.requestPermission(per, activity, 11)
         }
         binder.recycler.addItemDecoration(GridDividerItemDecoration(Color.parseColor("#f1f1f1"), 1))
 
-
-        binder.tab1.setOnClickListener{
-
-        }
-        binder.tab2.setOnClickListener{
-
-        }
-        binder.tab3.setOnClickListener{
-
-        }
-        binder.tab4.setOnClickListener{
-            startActivity(Intent(context, SettingActivity::class.java))
-        }
-
     }
 
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        viewModel.handlePhoto(requestCode, resultCode, data, hub)
+        L.e("UserFragment-------------${requestCode}")
+    }
 
-    private fun takePhoto() {
-        val dialogBox = AlertDialog.Builder(activity)
-        dialogBox.setTitle("获取头像方式：")
-        val items = arrayOf("从相册中选择", "拍照")
-        dialogBox.setItems(items) { dialog, which ->
-            Toast.makeText(activity, items[which], Toast.LENGTH_SHORT).show()
-            when (which) {
-                0 ->
-                    imgTool.takePhotoSavePath(context?.cacheDir?.absolutePath)
-                        .takePhotoPhotoName("default.jpeg")
-                        .gotoGallery(activity, take_picturl)
-                1 -> imgTool.takePhotoSavePath(context?.cacheDir?.absolutePath)
-                    .takePhotoPhotoName("default.jpeg")
-                    .gotoCameraForResult(activity, take_picturl)
+    fun onClick(v: View?) {
+        when (v?.id) {
+            R.id.tab1 -> {
             }
-
+            R.id.tab2 -> {
+            }
+            R.id.tab3 -> {
+            }
+            R.id.tab4 -> {
+                startActivity(Intent(context, SettingActivity::class.java))
+            }
         }
-        dialogBox.create().show()
     }
+
+    fun onClick(v: View?, item: UserCenterItem) {
+        L.e(item.name)
+        when (item.name) {
+            "地址" -> {
+            }
+            "优惠卷" -> {
+            }
+            "天气" -> {
+            }
+            "分享" -> {
+            }
+            "发布" -> {
+            }
+            "记录" -> {
+            }
+        }
+    }
+
 
     override fun loadData() {
-        L.e("获取用户信息")
         viewModel.getUser(hub, object : ConvertObject<User> {
             override fun callback(t: User) {
                 L.e(t.picture)
@@ -127,37 +126,6 @@ class UserFragment : BaseFragment() {
         val list = JSON.parseArray(centerItemString, UserCenterItem::class.java)
         viewModel.add(list)
     }
-
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == take_picturl) {
-            viewModel.uploadImg("${Environment.getExternalStorageDirectory()}/logo.png", hub)
-            imgTool.luBanCompress(
-                requestCode,
-                resultCode,
-                data,
-                object : InvokeSystemCameraUtils.OnGalleryResultCallback {
-                    override fun onResultFromCrop(path: String?) {
-
-                    }
-
-                    override fun onResultPhone(
-                        uri: Uri?,
-                        orgImgPath: String?,
-                        compressImgPath: String?
-                    ) {
-                        if (TextUtils.isEmpty(compressImgPath)) return
-                        compressImgPath?.let {
-                            viewModel.uploadImg(compressImgPath, hub)
-                        }
-                    }
-
-                })
-        }
-        L.e("UserFragment-------------${requestCode}")
-    }
-
 
 }
 

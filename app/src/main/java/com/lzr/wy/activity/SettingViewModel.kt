@@ -20,7 +20,7 @@ class SettingViewModel : ViewModel() {
     val totalList: MergeObservableList<Any> = MergeObservableList()
     val multipleItems: OnItemBindClass<Any> =
         OnItemBindClass<Any>().map(SettingItem::class.java, BR.item, R.layout.setting_item)
-            .map(Any::class.java, BR.item, R.layout.simple_view)
+            .map(String::class.java, BR.item, R.layout.simple_view)
 
 
     init {
@@ -33,7 +33,7 @@ class SettingViewModel : ViewModel() {
         itemList.add(SettingItem("版本号：", ApkUtils.getApkVersionName(ItgOk.instance().application)))
         itemList.add(SettingItem("黑夜模式：", "关"))
         itemList.add(SettingItem("缓存：", "20M"))
-        itemList.add(Any())
+        itemList.add("")
     }
 
     fun bindItemEvent(click: SettingActivity) {

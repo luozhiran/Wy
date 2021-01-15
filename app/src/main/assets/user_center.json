@@ -14,5 +14,13 @@
   {
     "name": "分享",
     "imgName": "ic_share"
+  },
+  {
+    "name": "发布",
+    "imgName": "ic_publish"
+  },
+  {
+    "name": "记录",
+    "imgName": "ic_record"
   }
 ]

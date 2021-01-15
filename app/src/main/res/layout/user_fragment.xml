@@ -9,6 +9,10 @@
             name="model"
             type="com.lzr.wy.fragment.UserViewModel" />
 
+        <variable
+            name="event"
+            type="com.lzr.wy.fragment.UserFragment" />
+
         <import type="com.plugin.mvvm.bindingAdapter.LayoutManagers" />
 
     </data>
@@ -49,14 +53,6 @@
                 android:text="Grace"
                 android:textColor="#ffffff"
                 android:textSize="20sp" />
-
-            <ImageView
-                android:id="@+id/back"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="5dp"
-                android:src="@mipmap/ic_back" />
         </FrameLayout>
 
 
@@ -79,6 +75,7 @@
                 android:button="@null"
                 android:drawableTop="@mipmap/ic_email"
                 android:gravity="center"
+                android:onClick="@{event::onClick}"
                 android:text="信息"
                 android:textColor="#ffffff"
                 android:textSize="18sp" />
@@ -92,6 +89,7 @@
                 android:button="@null"
                 android:drawableTop="@mipmap/ic_favorite"
                 android:gravity="center"
+                android:onClick="@{event::onClick}"
                 android:text="收藏"
                 android:textColor="#ffffff"
                 android:textSize="18sp" />
@@ -106,6 +104,7 @@
                 android:button="@null"
                 android:drawableTop="@mipmap/ic_history"
                 android:gravity="center"
+                android:onClick="@{event::onClick}"
                 android:text="足迹"
                 android:textColor="#ffffff"
                 android:textSize="18sp" />
@@ -120,6 +119,7 @@
                 android:button="@null"
                 android:drawableTop="@mipmap/ic_setting"
                 android:gravity="center"
+                android:onClick="@{event::onClick}"
                 android:text="设置"
                 android:textColor="#ffffff"
                 android:textSize="18sp" />
