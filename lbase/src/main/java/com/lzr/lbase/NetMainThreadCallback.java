@@ -8,10 +8,17 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.TypeReference;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.plugin.okhttp_lib.okhttp.ItgOk;
 import com.plugin.widget.dialog.KProgressHUD;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.concurrent.Executor;
 
 import okhttp3.Call;
@@ -19,12 +26,15 @@ import okhttp3.Callback;
 import okhttp3.Response;
 
 
-public abstract class NetMainThreadCallback implements Callback {
+public abstract class NetMainThreadCallback<T> implements Callback {
 
     KProgressHUD hud;
+    private Object LoginInfoData;
+    private Class<?> clz;
 
-    public NetMainThreadCallback(@Nullable KProgressHUD hub) {
+    public NetMainThreadCallback(@Nullable KProgressHUD hub, Class<?> clz) {
         this.hud = hub;
+        this.clz = clz;
         hud.show();
     }
 
@@ -46,9 +56,25 @@ public abstract class NetMainThreadCallback implements Callback {
     public void onResponse(Call call, Response response) throws IOException {
         if (response.code() == 200) {
             switchThread.execute(() -> {
-                onResponse(response);
-                if (hud != null)
-                    hud.dismiss();
+                try {
+                    String str = response.body().string();
+                    JSONObject object = new JSONObject(str);
+                    int code = object.optInt("code");
+                    String msg = object.optString("msg");
+                    String data = object.optString("data");
+                    if (code == 200) {
+                        T t = JSON.parseObject(data, (Type) clz);
+                        onResponse(t,msg);
+                    } else {
+                        onFailure(code, msg);
+                    }
+                } catch (IOException | JSONException e) {
+                    e.printStackTrace();
+                    onFailure(call, new IOException(e.getMessage()));
+                } finally {
+                    if (hud != null)
+                        hud.dismiss();
+                }
             });
         } else {
             switchThread.execute(() -> {
@@ -60,7 +86,9 @@ public abstract class NetMainThreadCallback implements Callback {
 
     }
 
-    public abstract void onResponse(Response response);
+    public abstract void onFailure(int code, String error);
+
+    public abstract void onResponse(T t,String msg);
 
 
     static class SwitchThread {

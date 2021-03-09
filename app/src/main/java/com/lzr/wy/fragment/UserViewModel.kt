@@ -2,7 +2,6 @@ package com.lzr.wy.fragment
 
 import android.app.Activity
 import android.app.AlertDialog
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Environment
@@ -11,15 +10,12 @@ import android.widget.Toast
 import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableList
 import androidx.lifecycle.ViewModel
-import com.alibaba.fastjson.JSON
-import com.alibaba.fastjson.TypeReference
-import com.lzr.lbase.ConvertObject
 import com.lzr.lbase.NetMainThreadCallback
+import com.lzr.lbase.UINCallback
 import com.lzr.wy.BR
 import com.lzr.wy.IP
 import com.lzr.wy.PROVIDER_AUTHORITY
 import com.lzr.wy.R
-import com.lzr.wy.bean.Repo
 import com.lzr.wy.bean.User
 import com.lzr.wy.bean.UserCenterItem
 import com.plugin.itg_util.InvokeSystemCameraUtils
@@ -27,8 +23,6 @@ import com.plugin.mvvm.MergeObservableList
 import com.plugin.mvvm.common.OnItemBindClass
 import com.plugin.okhttp_lib.okhttp.ItgOk
 import com.plugin.widget.dialog.KProgressHUD
-import okhttp3.Response
-import java.io.IOException
 
 
 class UserViewModel : ViewModel() {
@@ -39,20 +33,18 @@ class UserViewModel : ViewModel() {
         InvokeSystemCameraUtils.create(ItgOk.instance().application, PROVIDER_AUTHORITY)
 
 
-    fun getUser(hub: KProgressHUD, convertObject: ConvertObject<User>) {
+    fun getUser(hub: KProgressHUD, uinCallback: UINCallback<User>) {
         ItgOk.instance()
-            .url("${IP}/user")
-            .go(object : NetMainThreadCallback(hub) {
-                override fun onResponse(response: Response?) {
-                    val str = response?.body()?.string()
-                    val repo: Repo<User> = JSON.parseObject(str,
-                        object : TypeReference<Repo<User>>(User::class.java) {})
-                    if (repo.data == null) {
-                        onFailure(null, IOException("数据异常"))
-                    } else {
-                        convertObject.callback(repo.data!!)
-                    }
+            .url("${IP}/login-register-service/user")
+            .go(object : NetMainThreadCallback<User>(hub,User::class.java) {
+                override fun onFailure(code: Int, error: String?) {
+
                 }
+
+                override fun onResponse(t: User?, msg: String?) {
+                    uinCallback.callback(t)
+                }
+
             })
     }
 
@@ -63,11 +55,15 @@ class UserViewModel : ViewModel() {
             .url("${IP}/upload/head/photo")
             .method(ItgOk.POST)
             .addMultiFile("file", path)
-            .go(object : NetMainThreadCallback(hub) {
-                override fun onResponse(response: Response?) {
-
-
+            .go(object : NetMainThreadCallback<String>(hub,String::class.java) {
+                override fun onFailure(code: Int, error: String?) {
+                    TODO("Not yet implemented")
                 }
+
+                override fun onResponse(t: String?, msg: String?) {
+                    TODO("Not yet implemented")
+                }
+
             })
     }
 

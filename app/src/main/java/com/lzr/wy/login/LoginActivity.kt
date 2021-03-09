@@ -6,7 +6,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProviders
-import com.lzr.lbase.ConvertObject
+import com.lzr.lbase.UINCallback
 import com.lzr.lbase.WrapBaseActivity
 import com.lzr.lview.LoginView
 import com.lzr.wy.activity.MainActivity
@@ -51,17 +51,15 @@ class LoginActivity : WrapBaseActivity(), View.OnClickListener {
                                     phone,
                                     pwd,
                                     hub,
-                                    object : ConvertObject<Int> {
-                                        override fun callback(data: Int) {
-                                            if (data == 1) {
-                                                startActivity(
-                                                    Intent(
-                                                        this@LoginActivity,
-                                                        MainActivity::class.java
-                                                    )
+                                    object : UINCallback<Int> {
+                                        override fun callback(t: Int?) {
+                                            startActivity(
+                                                Intent(
+                                                    this@LoginActivity,
+                                                    MainActivity::class.java
                                                 )
-                                                finish()
-                                            }
+                                            )
+                                            finish()
                                         }
                                     })
                             }
@@ -73,8 +71,8 @@ class LoginActivity : WrapBaseActivity(), View.OnClickListener {
                                     email,
                                     vcode,
                                     hub,
-                                    object : ConvertObject<Int> {
-                                        override fun callback(data: Int) {
+                                    object : UINCallback<Int> {
+                                        override fun callback(t: Int?) {
                                             switchPan(LoginView.LOGIN)
                                         }
                                     })

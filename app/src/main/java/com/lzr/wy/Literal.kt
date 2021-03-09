@@ -6,5 +6,6 @@ val USER_XML = "user"
 
 val PROVIDER_AUTHORITY="com.lzr.wy.provider"
 
-val IP="http://192.168.40.163:8081"
-//val IP="http://47.100.4.54:8081"
+//val IP="http://192.168.40.163:8081"
+//val IP="http://192.168.107.130:8044"
+val IP="http://192.168.40.200"

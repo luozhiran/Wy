@@ -1,49 +1,42 @@
 package com.lzr.wy.login
 
 import android.content.Context
-import android.os.Handler
-import android.os.Looper
-import android.widget.Toast
 import androidx.lifecycle.ViewModel
-import com.itg.lib_log.L
-import com.lzr.lbase.ConvertObject
+import com.lzr.lbase.UINCallback
 import com.lzr.lbase.NetMainThreadCallback
 import com.lzr.wy.IP
 import com.lzr.wy.USER_XML
+import com.lzr.wy.bean.LoginInfoData
 import com.plugin.okhttp_lib.okhttp.ItgOk
 import com.plugin.widget.dialog.KProgressHUD
-import okhttp3.Call
-import okhttp3.Callback
-import okhttp3.Response
-import org.json.JSONObject
-import java.io.IOException
 
 class LoginViewModel : ViewModel() {
 
-    fun login(name: String, pwd: String, hub: KProgressHUD, convertObject: ConvertObject<Int>) {
+    fun login(name: String, pwd: String, hub: KProgressHUD, UINCallback: UINCallback<Int>) {
         hub?.show()
         ItgOk
             .instance()
-            .url("$IP/login")
-            .method(ItgOk.GET)
+            .url("${IP}/login-register-service/login")
+            .method(ItgOk.POST)
             .addParams("name", name)
             .addParams("pwd", pwd)
-            .go(object : NetMainThreadCallback(hub) {
-                override fun onResponse(response: Response?) {
-                    val json = JSONObject(response?.body()?.string() ?: "")
-                    val code = json.optInt("code")
-                    if (code == 1) {
-                        val sharedPreferences = ItgOk.instance().application.getSharedPreferences(
-                            USER_XML,
-                            Context.MODE_PRIVATE
-                        ).edit()
-                        sharedPreferences.putString(
-                            "token",
-                            json.optJSONObject("data")?.optString("token")
-                        ).apply()
-                        convertObject.callback(code);
-                    }
+            .go(object : NetMainThreadCallback<LoginInfoData>(hub, LoginInfoData::class.java) {
+                override fun onFailure(code: Int, error: String?) {
+
                 }
+
+                override fun onResponse(t: LoginInfoData?, msg: String?) {
+                    val sharedPreferences = ItgOk.instance().application.getSharedPreferences(
+                        USER_XML,
+                        Context.MODE_PRIVATE
+                    ).edit()
+                    sharedPreferences.putString(
+                        "token",
+                        t?.token
+                    ).apply()
+                    UINCallback.callback(200)
+                }
+
 
             })
 
@@ -55,7 +48,7 @@ class LoginViewModel : ViewModel() {
         email: String,
         code: String,
         hub: KProgressHUD?,
-        convertObject: ConvertObject<Int>
+        UINCallback: UINCallback<Int>
     ) {
         hub?.show()
         ItgOk
@@ -66,12 +59,16 @@ class LoginViewModel : ViewModel() {
             .addParams("pwd", pwd)
             .addParams("email", email)
             .addParams("vcode", code)
-            .go(object : NetMainThreadCallback(hub) {
-                override fun onResponse(response: Response?) {
-                    val json = JSONObject(response?.body()?.string() ?: "")
-                    val code = json.optInt("code")
-                    convertObject.callback(code)
+            .go(object : NetMainThreadCallback<String>(hub,String::class.java) {
+                override fun onFailure(code: Int, error: String?) {
+                    TODO("Not yet implemented")
                 }
+
+                override fun onResponse(t: String?, msg: String?) {
+                    TODO("Not yet implemented")
+                }
+
+
             })
     }
 

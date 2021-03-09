@@ -59,7 +59,7 @@ public class LoginView extends ViewGroup {
             loginViews.add(view);
             addView(view, relayout(view));
         }
-        switchPan(REGISTER);
+        switchPan(LOGIN);
     }
 
 

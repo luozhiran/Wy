@@ -26,16 +26,6 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <com.lzr.lview.LineTestView
-                android:id="@+id/register"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="注册"
-                android:textColor="@drawable/login_register_state"
-                app:checkColor="true" />
-
 
             <com.lzr.lview.LineTestView
                 android:id="@+id/login"
@@ -44,6 +34,16 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="登录"
+                app:checkColor="true"
+                android:textColor="@drawable/login_register_state" />
+
+            <com.lzr.lview.LineTestView
+                android:id="@+id/register"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="注册"
                 android:textColor="@drawable/login_register_state" />
         </LinearLayout>
 

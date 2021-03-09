@@ -30,7 +30,7 @@
         <RadioGroup
             android:id="@+id/bottomBar"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="50dp"
             android:checkedButton="@+id/tab1"
             android:orientation="horizontal">
 
@@ -40,6 +40,7 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:layout_weight="1"
+                android:drawableTop="@drawable/label1_selector"
                 android:background="@null"
                 android:button="@null"
                 android:gravity="center"
@@ -56,6 +57,7 @@
                 android:layout_weight="1"
                 android:background="@null"
                 android:button="@null"
+                android:drawableTop="@drawable/label2_selector"
                 android:gravity="center"
                 android:text="@string/tab2"
                 android:textColor="@drawable/tab_word_background_color"
@@ -70,6 +72,7 @@
                 android:layout_weight="1"
                 android:background="@null"
                 android:button="@null"
+                android:drawableTop="@drawable/label3_selector"
                 android:gravity="center"
                 android:text="@string/tab3"
                 android:textColor="@drawable/tab_word_background_color"
@@ -85,6 +88,7 @@
                 android:background="@null"
                 android:button="@null"
                 android:gravity="center"
+                android:drawableTop="@drawable/label4_selector"
                 android:text="@string/tab4"
                 android:textColor="@drawable/tab_word_background_color"
                 android:textSize="13sp" />
